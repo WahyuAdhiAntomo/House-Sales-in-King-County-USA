@@ -1,5 +1,6 @@
 ## Import yang Dibutuhkan
-•	import pandas as pd – library utama untuk membaca CSV dan mengolah data tabel (DataFrame). Dipakai di semua bagian.
+
+# •	import pandas as pd – library utama untuk membaca CSV dan mengolah data tabel (DataFrame). Dipakai di semua bagian.
 •	import numpy as np – library operasi numerik dan array. Dimuat di awal notebook, meskipun pada bagian 1 sampai 5 tidak dipanggil langsung.
 •	import matplotlib.pyplot as plt – membuat grafik: box plot, histogram, heatmap, dan diagram batang.
 •	import seaborn as sns – grafik statistik yang lebih ringkas di atas matplotlib: boxplot, histplot, heatmap, dan barplot.
