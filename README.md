@@ -1,4 +1,10 @@
 # House Sales in King County, USA
+https://www.kaggle.com/datasets/harlfoxem/housesalesprediction/code
+
+# Nama: Wahyu Adhi Antomo
+# Nim: 241011400776
+# Kelas: 05TPLP019
+# Mata Kuliah: Machine Learning
 
 ## Import yang Dibutuhkan
 
