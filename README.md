@@ -1,4 +1,4 @@
-### Import yang Dibutuhkan
+# Import yang Dibutuhkan
  •	import pandas as pd – library utama untuk membaca CSV dan mengolah data tabel (DataFrame). Dipakai di semua bagian.
  •	import numpy as np – library operasi numerik dan array. Dimuat di awal notebook, meskipun pada bagian 1 sampai 5 tidak dipanggil langsung.
  •	import matplotlib.pyplot as plt – membuat grafik: box plot, histogram, heatmap, dan diagram batang.
@@ -12,7 +12,7 @@
  •	import json – menulis metadata model ke file JSON (bagian 5.7).
  •	import subprocess, sys – dipakai pada blok try / except ImportError di bagian 5.3 dan 5.4 untuk memasang xgboost dan lightgbm secara otomatis lewat pip. Jika kedua library sudah terpasang, baris ini boleh dihilangkan.
 
-## 1. Data Loading
+# 1. Data Loading
 •	import pandas as pd – memuat library pandas untuk mengolah data tabel (DataFrame). Alias pd dipakai agar penulisan lebih singkat.
 •	import numpy as np – memuat NumPy untuk operasi numerik dan array.
 •	import matplotlib.pyplot as plt – memuat matplotlib untuk membuat grafik.
@@ -24,14 +24,14 @@
 •	print(df.describe()) – mencetak statistik deskriptif kolom numerik: jumlah, rata-rata, standar deviasi, minimum, kuartil, dan maksimum.
 •	df.head() – baris terakhir sel, sehingga 5 baris pertama ditampilkan lagi dalam bentuk tabel notebook.
 
-## 2. Data Cleaning dan Transformation
-# 2.1 Persiapan
+# 2. Data Cleaning dan Transformation
+## 2.1 Persiapan
 •	Empat baris import pertama sama seperti pada bagian 1.
 •	df = pd.read_csv('kc_house_data.csv') – membaca ulang dataset asli agar sel ini berdiri sendiri.
 •	print("Data awal:", df.shape) – mencetak ukuran data awal.
 •	df.describe(include="all") – menghitung statistik untuk semua kolom, termasuk yang berupa teks. Hasilnya tidak tampil karena bukan baris terakhir sel.
 
-# 2.2 Missing value
+## 2.2 Missing value
 •	missing_values = df.isnull().sum() – menghitung jumlah nilai kosong di setiap kolom.
 •	print(missing_values[missing_values > 0]) – mencetak hanya kolom yang punya nilai kosong. Hasilnya Series([], dtype: int64) karena dataset ini tidak punya nilai kosong.
 •	less = missing_values[missing_values < 1000].index – mengambil nama kolom yang nilai kosongnya kurang dari 1000. Kolom ini akan diisi (diimputasi). Di sini semua 21 kolom masuk.
@@ -43,7 +43,7 @@
 •	df[column] = df[column].fillna(df[column].mode()[0]) – mengisi nilai kosong dengan modus (nilai yang paling sering muncul). [0] dipakai karena mode() bisa mengembalikan beberapa nilai, dan diambil yang pertama.
 •	df = df.drop(columns=over) – membuang kolom yang terlalu banyak nilai kosongnya.
 
-# 2.3 Outlier
+## 2.3 Outlier
 •	for feature in numeric_features: – mengulang untuk setiap kolom numerik.
 •	plt.figure(figsize=(10, 6)) – membuat kanvas grafik baru berukuran 10 × 6 inci.
 •	sns.boxplot(x=df[feature]) – menggambar box plot untuk melihat sebaran dan titik outlier.
@@ -57,7 +57,7 @@
 •	categorical_features = df.select_dtypes(include=['object']).columns – mengambil nama kolom teks.
 •	df = pd.concat([df_filtered_numeric, df.loc[condition, categorical_features]], axis=1) – menggabungkan kolom numerik dan kolom teks dari baris yang lolos. Hasilnya 14.934 baris.
 
-# 2.4 Standardisasi
+## 2.4 Standardisasi
 •	plt.figure(figsize=(12, 5)) – kanvas baru berukuran 12 × 5 inci.
 •	plt.subplot(1, 2, 1) – membagi kanvas menjadi 1 baris × 2 kolom dan memakai kotak pertama.
 •	sns.histplot(df[numeric_features[3]], kde=True) – histogram kolom numerik ke-4 (indeks 3), yaitu bathrooms, ditambah garis kepadatan (kde).
@@ -67,14 +67,14 @@
 •	df[numeric_features] = scaler.fit_transform(df[numeric_features]) – menghitung rata-rata dan standar deviasi, lalu mengubah tiap nilai menjadi (x − rata-rata) / standar deviasi. Hasilnya berpusat di 0 dengan standar deviasi 1.
 •	Tiga baris berikutnya (plt.figure, plt.subplot, sns.histplot, plt.title, plt.show) menggambar histogram yang sama setelah standardisasi, dengan judul "Histogram Setelah Standardisasi". Bentuk sebarannya sama, hanya skalanya berubah.
 
-# 2.5 Duplikasi
+## 2.5 Duplikasi
 •	duplicates = df.duplicated() – menandai baris yang sama persis dengan baris sebelumnya (True/False).
 •	print("Baris duplikat:", duplicates.sum()) – mencetak jumlah baris duplikat, yaitu 0.
 •	print(df[duplicates]) – mencetak baris duplikat. Hasilnya tabel kosong.
 •	df = df.drop_duplicates() – membuang baris duplikat (tidak ada yang dibuang).
 •	print("Setelah hapus duplikat:", df.shape) – mencetak ukuran data, yaitu (14934, 21). Angka ini turun dari 21.613 karena penghapusan outlier di langkah 2.3, bukan karena duplikat.
 
-# 2.6 Encoding
+## 2.6 Encoding
 •	category_features = df.select_dtypes(include=['object']).columns – mengambil nama kolom teks (date).
 •	df[category_features] – menyebut kolom teks. Tidak menampilkan apa pun karena bukan baris terakhir sel.
 •	df_one_hot = pd.get_dummies(df, columns=category_features) – One Hot Encoding: tiap nilai unik date dijadikan kolom biner (0/1) sendiri.
@@ -86,8 +86,8 @@
 •	df_lencoder[col] = label_encoder.fit_transform(df[col]) – mengganti isi kolom teks dengan kode angka (0, 1, 2, …) sesuai urutan nilai uniknya.
 •	df_lencoder – baris terakhir sel, jadi tabel hasil ditampilkan. Nilai-nilai numeriknya sudah terstandardisasi.
 
-## 3. EDA dan ExDA
-# 3.1 Persiapan dan missing value
+# 3. EDA dan ExDA
+## 3.1 Persiapan dan missing value
 •	Empat import dan df = pd.read_csv('kc_house_data.csv') – sama seperti sebelumnya. df di sini adalah data asli, sedangkan df_lencoder adalah variabel dari sel cleaning yang masih tersimpan di memori notebook.
 •	df_lencoder.head() – memanggil 5 baris pertama data hasil cleaning. Tidak tampil karena bukan baris terakhir.
 •	missing_values = df_lencoder.isnull().sum() – jumlah nilai kosong per kolom pada data hasil cleaning.
@@ -96,7 +96,7 @@
 •	missing_data[missing_data['Missing Values'] > 0] – menyaring kolom yang punya nilai kosong. Tidak tampil karena bukan baris terakhir.
 •	Empat baris berikutnya (missing_values_ori, missing_percentage_ori, missing_data_ori, dan penyaringannya) melakukan hal yang sama untuk data asli df. Karena baris penyaringan ini terakhir di blok tersebut, hasilnya (tabel kosong) ditampilkan jika tidak diikuti kode lain.
 
-# 3.2 Histogram seluruh fitur numerik
+## 3.2 Histogram seluruh fitur numerik
 •	num_vars = df.select_dtypes(include=['number']).shape[1] – menghitung jumlah kolom numerik.
 •	n_cols = 4 – grafik disusun 4 kolom per baris.
 •	n_rows = -(-num_vars // n_cols) – menghitung jumlah baris grafik dengan pembulatan ke atas. Tanda minus ganda dipakai karena // membulatkan ke bawah.
@@ -109,7 +109,7 @@
 •	plt.tight_layout() – merapikan jarak antar grafik.
 •	plt.show() – menampilkan hasil.
 
-# 3.3 Distribusi fitur utama
+## 3.3 Distribusi fitur utama
 •	columns_to_plot = ['id', 'price', 'bedrooms', 'bathrooms', 'sqft_living'] – daftar kolom yang akan digambar.
 •	plt.figure(figsize=(15, 10)) – kanvas 15 × 10 inci.
 •	for i, column in enumerate(columns_to_plot, 1): – mengulang dengan nomor mulai dari 1.
@@ -117,7 +117,8 @@
 •	sns.histplot(df[column], kde=True, bins=30) – histogram 30 batang dengan garis kepadatan.
 •	plt.title(f'Distribution of {column}') – judul tiap grafik.
 •	plt.tight_layout() dan plt.show() – merapikan dan menampilkan.
-3.4 Korelasi
+
+## 3.4 Korelasi
 •	plt.figure(figsize=(12, 10)) – kanvas baru.
 •	correlation_matrix = df.select_dtypes(include=['number']).corr() – menghitung korelasi antar semua pasangan kolom numerik (nilai −1 sampai 1).
 •	sns.heatmap(correlation_matrix, annot=False, cmap='coolwarm', vmin=-1, vmax=1) – menggambar peta panas korelasi tanpa angka (annot=False), skala warna biru–merah dari −1 sampai 1.
@@ -128,7 +129,7 @@
 •	target_corr_sorted.plot(kind='bar') – diagram batang kekuatan korelasi tiap variabel.
 •	plt.title(...), plt.xlabel('Variables'), plt.ylabel('Correlation Coefficient'), plt.show() – judul, label sumbu, dan tampilkan.
 
-## 4. Data Splitting
+# 4. Data Splitting
 •	import pandas as pd – memuat pandas.
 •	from sklearn.model_selection import train_test_split – memuat fungsi pembagi data latih dan uji.
 •	from sklearn.preprocessing import LabelEncoder – memuat Label Encoder.
@@ -147,15 +148,15 @@
 •	print("Jumlah data latih:", len(x_train)) – 17.290 baris.
 •	print("Jumlah data test :", len(x_test)) – 4.323 baris.
 
-## 5. Modelling
-# 5.1 Persiapan data
+# 5. Modelling
+## 5.1 Persiapan data
 •	Empat import (pandas, numpy, matplotlib, seaborn), train_test_split, dan LabelEncoder – sama seperti bagian sebelumnya.
 •	from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score – memuat tiga fungsi penilai model: MAE (rata-rata selisih absolut), MSE (rata-rata kuadrat selisih), dan R² (seberapa besar variasi harga yang bisa dijelaskan model).
 •	Blok dari df = pd.read_csv(...) sampai x_train, x_test, y_train, y_test = train_test_split(...) – identik dengan bagian 4: membaca data, meng-encode kolom date, membuat sale_year dan sale_month, memisahkan X dan y, lalu membagi 80:20 dengan random_state=42.
 •	print("Train:", x_train.shape, " Test:", x_test.shape) – mencetak ukuran data latih (17290, 20) dan uji (4323, 20).
 •	results = {} – kamus kosong untuk menampung skor tiap model.
 
-# 5.2 Random Forest
+## 5.2 Random Forest
 •	from sklearn.ensemble import RandomForestRegressor – memuat model Random Forest untuk regresi, yaitu gabungan banyak pohon keputusan yang hasilnya dirata-rata.
 •	rf_model = RandomForestRegressor(n_estimators=200, random_state=42, n_jobs=-1) – membuat model dengan 200 pohon. random_state=42 mengunci keacakan, dan n_jobs=-1 memakai seluruh inti CPU.
 •	rf_model.fit(x_train, y_train) – melatih model memakai data latih.
@@ -163,7 +164,7 @@
 •	results['Random Forest'] = [mean_absolute_error(y_test, pred_rf), mean_squared_error(y_test, pred_rf), r2_score(y_test, pred_rf)] – menghitung MAE, MSE, dan R² dengan membandingkan harga aktual (y_test) dan prediksi, lalu menyimpannya di results.
 •	print("Random Forest selesai") – penanda proses selesai.
 
-# 5.3 XGBoost
+## 5.3 XGBoost
 •	try: / from xgboost import XGBRegressor – mencoba memuat model XGBoost.
 •	except ImportError: – dijalankan jika library belum terpasang.
 •	import subprocess, sys dan subprocess.check_call([sys.executable, "-m", "pip", "install", "xgboost"]) – memasang xgboost lewat pip memakai Python yang sedang dipakai notebook.
@@ -171,12 +172,12 @@
 •	xgb_model = XGBRegressor(...) – membuat model dengan parameter: n_estimators=300 (300 pohon berurutan), learning_rate=0.1 (seberapa besar tiap pohon mengoreksi kesalahan sebelumnya), max_depth=6 (kedalaman maksimal pohon), subsample=0.8 (tiap pohon memakai 80% baris), colsample_bytree=0.8 (tiap pohon memakai 80% kolom), random_state=42, n_jobs=-1, dan verbosity=0 (tanpa pesan log).
 •	xgb_model.fit(x_train, y_train), pred_xgb = xgb_model.predict(x_test), results['XGBoost'] = [...], dan print("XGBoost selesai") – melatih, memprediksi, menghitung skor, dan memberi penanda, sama seperti Random Forest.
 
-# 5.4 LightGBM
+## 5.4 LightGBM
 •	Struktur try / except ImportError untuk from lightgbm import LGBMRegressor sama dengan XGBoost, termasuk pemasangan otomatis lewat pip.
 •	lgbm_model = LGBMRegressor(...) – membuat model LightGBM. Parameternya mirip XGBoost, ditambah num_leaves=31 (jumlah daun maksimal per pohon) dan verbose=-1 (tanpa log).
 •	lgbm_model.fit(...), pred_lgbm = ...predict(x_test), results['LightGBM'] = [...], dan print("LightGBM selesai") – melatih, memprediksi, dan menyimpan skor.
 
-# 5.5 Perbandingan model
+## 5.5 Perbandingan model
 •	df_results = pd.DataFrame(results, index=['MAE', 'MSE', 'R2']).T – mengubah kamus menjadi tabel. Awalnya model menjadi kolom, lalu .T (transpose) menukar sehingga tiap model menjadi satu baris.
 •	df_results = df_results.sort_values(by='R2', ascending=False) – mengurutkan dari R² tertinggi.
 •	print(df_results) – mencetak tabel perbandingan. Urutannya XGBoost, LightGBM, Random Forest.
@@ -188,7 +189,7 @@
 •	plt.show() – menampilkan grafik.
 •	Blok grafik kedua memakai pola yang sama untuk MAE: palet magma, teks diletakkan di val + 100, dan angkanya diformat dengan pemisah ribuan lewat f"{val:,.0f}".
 
-# 5.6 Feature importance model terbaik
+## 5.6 Feature importance model terbaik
 •	best_model_name = df_results.index[0] – nama model di baris teratas (R² tertinggi), yaitu XGBoost.
 •	print(f"Model terbaik: {best_model_name}") – mencetak nama tersebut.
 •	best_model = {'Random Forest': rf_model, 'XGBoost': xgb_model, 'LightGBM': lgbm_model}[best_model_name] – kamus yang memetakan nama ke objek model, lalu mengambil objek sesuai nama terbaik.
@@ -206,7 +207,7 @@
 •	Dua print(...) terakhir – mengonfirmasi nama file yang disimpan.
 
 
-### Ringkasan Alur
+# Ringkasan Alur
 1.	Loading: data dibaca dari kc_house_data.csv.
 2.	Cleaning: missing value, outlier, standardisasi, duplikat, dan encoding diuji coba pada salinan data (hanya untuk eksplorasi).
 3.	EDA: distribusi dan korelasi fitur terhadap price.
